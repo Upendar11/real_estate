@@ -1,0 +1,8 @@
+{
+  "name": "SQL for Data Engineers",
+  "out": "series_out",
+  "file_prefix": "SQL_Video",
+  "end_line": "That's the end of the course. Thanks for watching!",
+  "welcome": "Hi! I'm Pip, and welcome to SQL for Data Engineers. We'll follow Asha, a curious student, and Mira, her mentor. ",
+  "groups": [["Foundations", [1, 2, 3, 4]], ["Next Steps", [5, 6, 7, 8]]]
+}

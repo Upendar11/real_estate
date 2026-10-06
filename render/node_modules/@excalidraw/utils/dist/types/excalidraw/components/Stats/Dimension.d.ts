@@ -1,0 +1,11 @@
+import type { NonDeletedExcalidrawElement } from "@excalidraw/element/types";
+import type { Scene } from "@excalidraw/element";
+import type { AppState } from "../../types";
+interface DimensionDragInputProps {
+    property: "width" | "height";
+    element: NonDeletedExcalidrawElement;
+    scene: Scene;
+    appState: AppState;
+}
+declare const DimensionDragInput: ({ property, element, scene, appState, }: DimensionDragInputProps) => import("react/jsx-runtime").JSX.Element;
+export default DimensionDragInput;
