@@ -46,8 +46,18 @@ def tts():
             p = f"{WORK}/a_{si:02d}_{bi:02d}.wav"
             if os.path.exists(p):
                 continue
+            # Collect audio chunks from generator
+            audio_bytes = b""
+            sample_rate = 22050
+            for chunk in v.synthesize(spoken(b["say"]), syn_config=cfg):
+                audio_bytes += chunk.audio_int16_bytes
+                sample_rate = chunk.sample_rate
+            # Write to WAV file with proper parameters
             with wave.open(p, "wb") as wf:
-                v.synthesize_wav(spoken(b["say"]), wf, syn_config=cfg)
+                wf.setnchannels(1)  # Mono
+                wf.setsampwidth(2)  # 16-bit
+                wf.setframerate(sample_rate)
+                wf.writeframes(audio_bytes)
     print("tts done")
 
 async def render_steps():
@@ -131,7 +141,7 @@ def compose():
                 events.append((t + j * (0.75 * d) / max(n, 1), si, k)); k += 1
             chunks = sentences(b["say"]); tot = sum(len(c) for c in chunks); tt = t
             for c in chunks:
-                cd = d * len(c) / tot
+                cd = d * len(c) / max(tot, 1)  # Avoid division by zero
                 subs.append((tt, tt + cd, c)); tt += cd
             t += d + GAP
         t += HOLD

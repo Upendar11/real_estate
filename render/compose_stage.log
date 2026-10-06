@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "/workspace/render/make_video.py", line 217, in <module>
+    elif stage == "compose": compose()
+                             ^^^^^^^^^
+  File "/workspace/render/make_video.py", line 144, in compose
+    cd = d * len(c) / tot
+         ~~~~~~~~~~~^~~~~
+ZeroDivisionError: float division by zero
+total 12.4 min, 328 steps
+frame 0/22407
+frame 1800/22407
+frame 3600/22407
+frame 5400/22407
+frame 7200/22407
+frame 9000/22407
+frame 10800/22407
+frame 12600/22407
+frame 14400/22407
+frame 16200/22407
+frame 18000/22407
+frame 19800/22407
+frame 21600/22407
+video done

@@ -1,0 +1,708 @@
+1
+00:00:00,500 --> 00:00:02,893
+Welcome to Day 2 of SQL Mastery!
+
+2
+00:00:02,893 --> 00:00:07,082
+Today we're solving a real-world data quality challenge.
+
+3
+00:00:07,532 --> 00:00:13,337
+In this episode: Understand the business problem; Learn data quality validation; Master
+
+4
+00:00:13,337 --> 00:00:17,540
+reconciliation techniques; Build trustworthy financial reports.
+
+5
+00:00:20,190 --> 00:00:20,958
+Part one.
+
+6
+00:00:20,958 --> 00:00:22,919
+The Business Challenge.
+
+7
+00:00:25,569 --> 00:00:29,702
+An e-commerce company is facing serious data issues
+
+8
+00:00:30,152 --> 00:00:34,366
+Finance has discovered multiple problems in our payment data
+
+9
+00:00:34,816 --> 00:00:36,626
+That sounds concerning!
+
+10
+00:00:36,626 --> 00:00:38,357
+What kind of problems?
+
+11
+00:00:41,007 --> 00:00:44,014
+Duplicate payments appearing in the system
+
+12
+00:00:44,464 --> 00:00:47,076
+Successful orders missing their payments
+
+13
+00:00:47,526 --> 00:00:50,278
+Payment amounts don't match order totals
+
+14
+00:00:50,728 --> 00:00:53,538
+Payments referencing non-existent orders
+
+15
+00:00:53,988 --> 00:00:57,505
+Invalid records entering financial reports
+
+16
+00:00:57,955 --> 00:01:01,160
+Daily books cannot be closed with confidence
+
+17
+00:01:03,810 --> 00:01:07,211
+These issues have serious business consequences!
+
+18
+00:01:09,861 --> 00:01:10,658
+Part two.
+
+19
+00:01:10,658 --> 00:01:12,694
+Understanding the Data.
+
+20
+00:01:15,344 --> 00:01:18,386
+We have two main data sources to work with
+
+21
+00:01:18,836 --> 00:01:22,528
+First, the orders table from our sales platform
+
+22
+00:01:22,978 --> 00:01:26,171
+And the payments table from the payment processor?
+
+23
+00:01:28,821 --> 00:01:32,199
+The orders table tracks every customer purchase
+
+24
+00:01:34,849 --> 00:01:38,054
+The payments table tracks all payment attempts
+
+25
+00:01:40,704 --> 00:01:43,850
+Data flows from two independent systems
+
+26
+00:01:46,500 --> 00:01:47,546
+Part three.
+
+27
+00:01:47,546 --> 00:01:49,449
+Examining Real Data.
+
+28
+00:01:52,099 --> 00:01:54,839
+Can you spot the data quality issues here?
+
+29
+00:01:57,489 --> 00:02:00,252
+Let me highlight the problems in the orders!
+
+30
+00:02:02,902 --> 00:02:06,373
+Order 2004 has a missing customer I D
+
+31
+00:02:06,823 --> 00:02:10,864
+Order 2005 has a negative quantity of minus 2
+
+32
+00:02:11,314 --> 00:02:14,506
+Order 2006 has a missing unit price
+
+33
+00:02:14,956 --> 00:02:18,521
+Order 2003 is cancelled but has a payment
+
+34
+00:02:21,171 --> 00:02:24,038
+The payments table has even more issues!
+
+35
+00:02:26,688 --> 00:02:30,264
+Payment 501 appears twice as duplicates
+
+36
+00:02:30,714 --> 00:02:36,217
+Payment 502 amount is 100 but order expects 120
+
+37
+00:02:36,667 --> 00:02:39,872
+Payment 503 is for a cancelled order
+
+38
+00:02:40,322 --> 00:02:45,918
+Payment 504 references non-existent order 9999
+
+39
+00:02:46,368 --> 00:02:50,594
+Payment 505 has both failed and successful versions
+
+40
+00:02:53,244 --> 00:02:54,075
+Part four.
+
+41
+00:02:54,075 --> 00:02:55,902
+Building the Solution.
+
+42
+00:02:58,552 --> 00:03:02,326
+We'll solve this with a structured six step approach
+
+43
+00:03:02,776 --> 00:03:06,653
+Each step validates, cleans, or reconciles the data
+
+44
+00:03:07,103 --> 00:03:10,099
+And we never silently discard bad records!
+
+45
+00:03:12,749 --> 00:03:16,023
+Validate all orders against quality rules
+
+46
+00:03:16,473 --> 00:03:19,387
+Store invalid orders with rejection reasons
+
+47
+00:03:19,837 --> 00:03:22,414
+Keep latest version of each payment
+
+48
+00:03:22,864 --> 00:03:25,244
+Store invalid payments separately
+
+49
+00:03:25,694 --> 00:03:27,703
+Match orders with their payments
+
+50
+00:03:28,153 --> 00:03:30,591
+Create financial summary report
+
+51
+00:03:33,241 --> 00:03:34,134
+Part five.
+
+52
+00:03:34,134 --> 00:03:36,457
+Validation and Quarantine.
+
+53
+00:03:39,107 --> 00:03:41,290
+order I D must not be null
+
+54
+00:03:41,740 --> 00:03:44,108
+customer I D must not be null
+
+55
+00:03:44,558 --> 00:03:47,159
+quantity must be greater than zero
+
+56
+00:03:47,609 --> 00:03:50,453
+unit price must be greater than zero
+
+57
+00:03:50,903 --> 00:03:53,933
+order status must be in approved set
+
+58
+00:03:54,383 --> 00:03:58,702
+Calculate expected amount equals quantity times unit price
+
+59
+00:04:01,352 --> 00:04:05,067
+We apply all validation rules in the WHERE clause
+
+60
+00:04:05,517 --> 00:04:08,954
+Only records passing ALL rules make it through
+
+61
+00:04:11,604 --> 00:04:14,414
+Think of validation as a quality gate
+
+62
+00:04:17,064 --> 00:04:20,477
+Invalid records must be preserved, not deleted
+
+63
+00:04:20,927 --> 00:04:24,422
+We quarantine them with explicit rejection reasons
+
+64
+00:04:24,872 --> 00:04:28,633
+This helps us investigate and fix upstream issues!
+
+65
+00:04:31,283 --> 00:04:34,313
+We capture the FIRST rejection reason found
+
+66
+00:04:34,763 --> 00:04:38,757
+Alternative: capture ALL reasons in comma-separated list
+
+67
+00:04:41,407 --> 00:04:45,030
+Option A, one row per order with combined reasons
+
+68
+00:04:45,480 --> 00:04:49,613
+Option B, multiple rows per order, one per failure
+
+69
+00:04:50,063 --> 00:04:53,023
+We choose option A for simpler analysis
+
+70
+00:04:53,473 --> 00:04:56,480
+Always document your choice in production code!
+
+71
+00:04:59,130 --> 00:04:59,992
+Part six.
+
+72
+00:04:59,992 --> 00:05:01,812
+Payment Processing.
+
+73
+00:05:04,462 --> 00:05:07,887
+Payment systems often create duplicate records
+
+74
+00:05:08,337 --> 00:05:10,218
+Why do duplicates happen?
+
+75
+00:05:10,668 --> 00:05:14,789
+Retries, system issues, or versioning can cause them
+
+76
+00:05:17,439 --> 00:05:21,538
+Payment PAY-501 appears twice in our data!
+
+77
+00:05:24,188 --> 00:05:27,439
+Keep the latest version by updated at timestamp
+
+78
+00:05:27,889 --> 00:05:30,872
+Use payment record I D as tie breaker
+
+79
+00:05:31,322 --> 00:05:33,911
+This ensures deterministic results
+
+80
+00:05:34,361 --> 00:05:36,927
+Row number function makes this easy!
+
+81
+00:05:39,577 --> 00:05:42,607
+ROW_NUMBER partitions by payment_id
+
+82
+00:05:43,057 --> 00:05:46,622
+We order by updated_at DESC to get latest first
+
+83
+00:05:47,072 --> 00:05:50,462
+Then payment_record_id DESC breaks ties
+
+84
+00:05:50,912 --> 00:05:54,871
+Filter rn = 1 keeps only the latest version
+
+85
+00:05:57,521 --> 00:06:01,387
+Deduplication keeps one record per payment ID
+
+86
+00:06:04,037 --> 00:06:06,475
+payment amount must be positive
+
+87
+00:06:06,925 --> 00:06:09,328
+payment status must be valid
+
+88
+00:06:09,778 --> 00:06:12,797
+order I D must exist in orders table
+
+89
+00:06:13,247 --> 00:06:15,395
+Detect orphan payments early!
+
+90
+00:06:18,045 --> 00:06:21,226
+The subquery checks if order_id exists
+
+91
+00:06:21,676 --> 00:06:25,890
+This catches orphan payments like PAY-504
+
+92
+00:06:28,540 --> 00:06:35,738
+Orphan Payment, payment 504 references order 9999 which doesn't exist
+
+93
+00:06:36,188 --> 00:06:38,893
+Never convert null amounts to zero!
+
+94
+00:06:39,343 --> 00:06:44,765
+Case sensitivity matters, lowercase success is not equal to uppercase success
+
+95
+00:06:47,415 --> 00:06:48,486
+Part seven.
+
+96
+00:06:48,486 --> 00:06:49,946
+Reconciliation.
+
+97
+00:06:52,596 --> 00:06:55,627
+Now we match completed orders with their payments
+
+98
+00:06:56,077 --> 00:06:59,060
+We use left join to find missing payments
+
+99
+00:06:59,510 --> 00:07:01,101
+Why not inner join?
+
+100
+00:07:03,751 --> 00:07:09,637
+Inner join only returns matched orders, hides missing payments, and loses critical data!
+
+101
+00:07:10,087 --> 00:07:16,937
+Left join returns all completed orders, shows missing payments as null, and reveals data quality
+
+102
+00:07:16,937 --> 00:07:17,436
+issues!
+
+103
+00:07:20,086 --> 00:07:23,709
+NULL payment means order has no successful payment
+
+104
+00:07:24,159 --> 00:07:27,247
+Multiple payments might indicate data issues
+
+105
+00:07:27,697 --> 00:07:29,996
+Exact match is ideal case
+
+106
+00:07:30,446 --> 00:07:33,534
+COALESCE handles NULL payments gracefully
+
+107
+00:07:33,984 --> 00:07:37,467
+LEFT JOIN from orders reveals missing payments
+
+108
+00:07:40,117 --> 00:07:43,728
+Reconciliation produces four possible statuses
+
+109
+00:07:46,378 --> 00:07:52,566
+Order 2001 is perfect, 2002 is short, 2004 is missing!
+
+110
+00:07:55,216 --> 00:07:56,187
+Part eight.
+
+111
+00:07:56,187 --> 00:07:58,571
+Summary and Best Practices.
+
+112
+00:08:01,221 --> 00:08:04,785
+Finance needs a daily summary to close the books
+
+113
+00:08:05,235 --> 00:08:08,405
+We aggregate all reconciliation results
+
+114
+00:08:08,855 --> 00:08:11,479
+This is what management sees every day!
+
+115
+00:08:14,129 --> 00:08:17,089
+Conditional aggregation counts each status
+
+116
+00:08:17,539 --> 00:08:20,825
+Unreconciled amount shows total discrepancy
+
+117
+00:08:21,275 --> 00:08:23,957
+Group by date for daily summaries
+
+118
+00:08:26,607 --> 00:08:29,567
+This is the trustworthy report finance needs!
+
+119
+00:08:32,217 --> 00:08:35,155
+Never silently discard bad records
+
+120
+00:08:35,605 --> 00:08:38,670
+Always quarantine with explicit reasons
+
+121
+00:08:39,120 --> 00:08:41,755
+Deduplicate before reconciliation
+
+122
+00:08:42,205 --> 00:08:45,119
+Use left join to reveal missing data
+
+123
+00:08:45,569 --> 00:08:48,181
+Handle nulls explicitly with coalesce
+
+124
+00:08:48,631 --> 00:08:51,638
+Create audit trails for investigations
+
+125
+00:08:54,288 --> 00:09:01,458
+Anti patterns include converting null to zero, using inner join only, deleting bad records, and
+
+126
+00:09:01,458 --> 00:09:02,891
+ignoring duplicates
+
+127
+00:09:03,341 --> 00:09:10,221
+Best practices include quarantining invalid data, using left join, preserving records with reasons,
+
+128
+00:09:10,221 --> 00:09:12,653
+and deduplicating deterministically
+
+129
+00:09:15,303 --> 00:09:16,543
+Practice 1 of 1.
+
+130
+00:09:16,543 --> 00:09:20,806
+What happens if we use INNER JOIN instead of LEFT JOIN?
+
+131
+00:09:20,806 --> 00:09:23,673
+Pause the video and write your query.
+
+132
+00:09:24,123 --> 00:09:24,123
+
+
+133
+00:09:26,773 --> 00:09:30,268
+Inner join only shows orders that HAVE payments
+
+134
+00:09:30,718 --> 00:09:33,957
+Missing payments become invisible to the business
+
+135
+00:09:34,407 --> 00:09:37,646
+This is a dangerous data quality blind spot!
+
+136
+00:09:40,296 --> 00:09:43,466
+Memory hook: LEFT reveals what's missing
+
+137
+00:09:46,116 --> 00:09:46,994
+Quick quiz!
+
+138
+00:09:46,994 --> 00:09:48,032
+Question one.
+
+139
+00:09:48,032 --> 00:09:51,944
+What SQL pattern helps you find missing payments?
+
+140
+00:09:51,944 --> 00:09:53,221
+Pause and think.
+
+141
+00:09:53,671 --> 00:09:53,671
+
+
+142
+00:09:54,121 --> 00:09:58,079
+Use LEFT JOIN starting from orders to reveal NULL payments!
+
+143
+00:09:58,079 --> 00:10:01,969
+Never use INNER JOIN when you need to detect missing data.
+
+144
+00:10:04,619 --> 00:10:08,799
+Split payments, one order with multiple successful payments
+
+145
+00:10:09,249 --> 00:10:12,848
+Refunds represented as negative payment amounts
+
+146
+00:10:13,298 --> 00:10:16,235
+Late payments that arrive the next day
+
+147
+00:10:16,685 --> 00:10:20,319
+Status changes where a payment later becomes refunded
+
+148
+00:10:20,769 --> 00:10:24,322
+Penny differences due to rounding in different systems
+
+149
+00:10:24,772 --> 00:10:29,439
+Case sensitivity issues with lowercase success versus uppercase
+
+150
+00:10:32,089 --> 00:10:34,144
+Customer places one order
+
+151
+00:10:34,594 --> 00:10:36,243
+First partial payment
+
+152
+00:10:36,693 --> 00:10:38,423
+Second partial payment
+
+153
+00:10:38,873 --> 00:10:41,682
+Sum of payments equals order amount
+
+154
+00:10:42,132 --> 00:10:45,685
+Our solution already handles this with sum function!
+
+155
+00:10:48,335 --> 00:10:52,004
+Modern systems use automated reconciliation daily
+
+156
+00:10:54,654 --> 00:10:59,309
+These concepts come up frequently in data engineering interviews
+
+157
+00:10:59,759 --> 00:11:01,501
+What should I focus on?
+
+158
+00:11:01,951 --> 00:11:05,306
+Understand the why behind each design decision
+
+159
+00:11:07,956 --> 00:11:11,253
+Question, why quarantine instead of delete?
+
+160
+00:11:11,703 --> 00:11:15,802
+Answer, enables root cause analysis and system fixes
+
+161
+00:11:16,252 --> 00:11:19,816
+Question, why deduplicate before reconciliation?
+
+162
+00:11:20,266 --> 00:11:24,155
+Answer, prevents double counting and inflated totals
+
+163
+00:11:24,605 --> 00:11:27,879
+Question, how does inner join hide problems?
+
+164
+00:11:28,329 --> 00:11:32,219
+Answer, it drops unmatched orders, losing visibility
+
+165
+00:11:34,869 --> 00:11:39,234
+C T Es break complex queries into logical steps
+
+166
+00:11:39,684 --> 00:11:43,422
+Window functions enable deduplication with row number
+
+167
+00:11:43,872 --> 00:11:47,007
+Left join reveals missing relationships
+
+168
+00:11:47,457 --> 00:11:50,696
+Coalesce handles null values explicitly
+
+169
+00:11:51,146 --> 00:11:55,024
+Conditional aggregation counts by status in one query
+
+170
+00:11:57,674 --> 00:11:58,940
+Let's recap.
+
+171
+00:11:59,390 --> 00:12:03,349
+You learned data quality validation and quarantine patterns
+
+172
+00:12:03,799 --> 00:12:07,235
+You mastered payment deduplication with row number
+
+173
+00:12:07,685 --> 00:12:11,458
+You built order payment reconciliation with left join
+
+174
+00:12:11,908 --> 00:12:15,206
+You created a trustworthy daily financial summary
+
+175
+00:12:15,656 --> 00:12:19,011
+Tomorrow we'll tackle slowly changing dimensions!
+
+176
+00:12:19,461 --> 00:12:23,516
+Next time: Day 3: Slowly Changing Dimensions.
+
+177
+00:12:23,516 --> 00:12:24,778
+See you there!
+
