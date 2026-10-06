@@ -105,7 +105,7 @@ def wrap(s, n=58):
     lines.append(cur)
     return lines
 
-FONT = ImageFont.truetype("/usr/share/fonts/opentype/inter/Inter-SemiBold.otf", 40)
+FONT = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 40)
 def sub_img(s):
     lines = wrap(s)
     im = Image.new("RGBA", (W, 190), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
